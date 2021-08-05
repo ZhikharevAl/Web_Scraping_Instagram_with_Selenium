@@ -1,67 +1,60 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 import time
 
-#specify the path to chromedriver.exe (download and save on your computer)
 driver = webdriver.Chrome()
 
-#open the webpage
+# открытие страницы
 driver.get("http://www.instagram.com")
 
-#target username
 username = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='username']")))
 password = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='password']")))
 
-#enter username and password
+# ввод имя и пароль
 username.clear()
-username.send_keys("waltafunk")
+username.send_keys("Name")
 password.clear()
-password.send_keys("Nulla1Rosa88")
+password.send_keys("Password")
 
-#target the login button and click it
+# target the login button and click it
 button = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
 
-
 time.sleep(5)
-alert = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "Не сейчас")]'))).click()
-alert2 = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "Не сейчас")]'))).click()
+alert = WebDriverWait(driver, 15).until(
+    EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "Не сейчас")]'))).click()
+alert2 = WebDriverWait(driver, 15).until(
+    EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "Не сейчас")]'))).click()
 
-# target the search input field
+# поле ввода для поиска
 searchbox = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Поиск']")))
 searchbox.clear()
 
-# search for the hashtag
+# поиск по хэштегу
 keyword = "#space"
 searchbox.send_keys(keyword)
 
-# FIXING THE DOUBLE ENTER
-time.sleep(5)  # Wait for 5 seconds
+time.sleep(8)  # ожидание 8 секунд
 my_link = WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, '/" + keyword[1:] + "/')]")))
 my_link.click()
 
-
-#scroll down 2 times
-#increase the range to sroll more
+# скролл
 n_scrolls = 3
 for j in range(0, n_scrolls):
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(5)
 
-    # target all the link elements on the page
     anchors = driver.find_elements_by_tag_name('a')
     anchors = [a.get_attribute('href') for a in anchors]
-    # narrow down all links to image links only
     anchors = [a for a in anchors if str(a).startswith("https://www.instagram.com/p/")]
 
     print('Found ' + str(len(anchors)) + ' links to images')
 
 images = []
 
-#follow each image link and extract only image at index=1
+# переход по ссылке и извлечение изображения с индексом 1
 for a in anchors:
     driver.get(a)
     time.sleep(5)
@@ -69,21 +62,19 @@ for a in anchors:
     img = [i.get_attribute('src') for i in img]
     images.append(img[1])
 
-#Save images to computer
-
+# Сохранение изображений на компьютер
 import os
 import wget
 
 path = os.getcwd()
 path = os.path.join(path, keyword[1:])
 
-#create the directory
+# Создание директории
 os.mkdir(path)
 
 path
 
-
-#download images
+# Загрузка изображений
 counter = 0
 for image in images:
     save_as = os.path.join(path, keyword[1:] + str(counter) + '.jpg')
