@@ -68,3 +68,24 @@ for a in anchors:
     img = driver.find_elements_by_tag_name('img')
     img = [i.get_attribute('src') for i in img]
     images.append(img[1])
+
+#Save images to computer
+
+import os
+import wget
+
+path = os.getcwd()
+path = os.path.join(path, keyword[1:])
+
+#create the directory
+os.mkdir(path)
+
+path
+
+
+#download images
+counter = 0
+for image in images:
+    save_as = os.path.join(path, keyword[1:] + str(counter) + '.jpg')
+    wget.download(image, save_as)
+    counter += 1
