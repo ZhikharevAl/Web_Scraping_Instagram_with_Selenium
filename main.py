@@ -42,3 +42,29 @@ time.sleep(5)  # Wait for 5 seconds
 my_link = WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, '/" + keyword[1:] + "/')]")))
 my_link.click()
+
+
+#scroll down 2 times
+#increase the range to sroll more
+n_scrolls = 3
+for j in range(0, n_scrolls):
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(5)
+
+    # target all the link elements on the page
+    anchors = driver.find_elements_by_tag_name('a')
+    anchors = [a.get_attribute('href') for a in anchors]
+    # narrow down all links to image links only
+    anchors = [a for a in anchors if str(a).startswith("https://www.instagram.com/p/")]
+
+    print('Found ' + str(len(anchors)) + ' links to images')
+
+images = []
+
+#follow each image link and extract only image at index=1
+for a in anchors:
+    driver.get(a)
+    time.sleep(5)
+    img = driver.find_elements_by_tag_name('img')
+    img = [i.get_attribute('src') for i in img]
+    images.append(img[1])
