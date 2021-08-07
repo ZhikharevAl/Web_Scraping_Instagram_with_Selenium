@@ -18,7 +18,7 @@ username.send_keys("Name")
 password.clear()
 password.send_keys("Password")
 
-# target the login button and click it
+# нажатие на кнопку входа в систему
 button = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
 
 time.sleep(5)
